@@ -1,0 +1,17 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="janumg20sm_modbus_tcp_windows" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="janumg20cm_modbus_tcp" />
+    <working_directory value="$PROJECT_DIR$/../janumg20sm_modbus_tcp/" />
+    <parameters value="-ip=10.10.12.20 -id=1 -q=1" />
+    <envs>
+      <env name="GOOS" value="windows" />
+      <env name="GOARCH" value="amd64" />
+    </envs>
+    <kind value="FILE" />
+    <filePath value="$PROJECT_DIR$/../janumg20sm_modbus_tcp/main.go" />
+    <directory value="$PROJECT_DIR$/" />
+    <output_directory value="$PROJECT_DIR$/../janumg20sm_modbus_tcp/bin/0.00.1/win" />
+    <option name="run" value="false" />
+    <method v="2" />
+  </configuration>
+</component>
