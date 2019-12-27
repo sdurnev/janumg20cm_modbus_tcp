@@ -1,4 +1,4 @@
-# jan-modbus-tcp
+# janumg20cm-modbus-tcp
 
 
 Read modbus arguments from 19000 address, and returns a json object.
