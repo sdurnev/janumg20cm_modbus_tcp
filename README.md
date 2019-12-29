@@ -11,8 +11,8 @@ Programm flags:
 
 -id - janitza modbus slave ID (defaut value 1);
 
--q - quantity of janitza modbus arguments, value range 1 - 61 (defaut value 61).
+-type -  (defaut value 0).
 
 Example:
 
-`jan_modbus_tcp -ip=192.168.10.10 -port=1502 -id=2 -q=10`
+`janumg20cm_modbus_tcp -ip=192.168.10.10 -port=502 -id=2 -type=1`
