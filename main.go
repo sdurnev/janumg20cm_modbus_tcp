@@ -398,8 +398,8 @@ func main() {
 		var dataA, dataB = creatData(paramName4, serverParam, s)
 		PrintJSON(dataA, dataB, paramName4)
 	case 5:
-		var dataA, dataB = creatData(paramName5, serverParam, s)
-		PrintJSON(dataA, dataB, paramName5)
+		var dataA, dataB = creatData5(paramName5, serverParam, s)
+		PrintJSON5(dataA, dataB, paramName5)
 	}
 }
 
@@ -408,22 +408,53 @@ func PrintJSON(dataF []float32, dataS []uint16, param Modbusparams) {
 	fmt.Println(len(dataF))
 	fmt.Println(dataS)
 	fmt.Println(len(dataS))*/
-	for l := 0; l < len(dataF)+3; l++ {
-		if l == 0 {
-			fmt.Printf("{\"%d_%s\":", param[l].Id, param[l].Name)
-			fmt.Print(dataF[l])
-		} else if l > 0 && l < 37 {
-			fmt.Printf(",\"%d_%s\":", param[l].Id, param[l].Name)
-			fmt.Print(dataF[l])
-		} else if l >= 37 && l < 40 {
-			fmt.Printf(",\"%d_%s\":", param[l].Id, param[l].Name)
-			fmt.Print(dataS[l-37])
-		} else if l >= 40 {
-			fmt.Printf(",\"%d_%s\":", param[l].Id, param[l].Name)
-			fmt.Print(dataF[l-3])
+	if dataF == nil || dataS == nil {
+		fmt.Printf("{\"status\":\"error\",\"version\":\"%s\"}", version)
+	} else {
+		for l := 0; l < len(dataF)+3; l++ {
+			if l == 0 {
+				fmt.Printf("{\"%d_%s\":", param[l].Id, param[l].Name)
+				fmt.Print(dataF[l])
+			} else if l > 0 && l < 37 {
+				fmt.Printf(",\"%d_%s\":", param[l].Id, param[l].Name)
+				fmt.Print(dataF[l])
+			} else if l >= 37 && l < 40 {
+				fmt.Printf(",\"%d_%s\":", param[l].Id, param[l].Name)
+				fmt.Print(dataS[l-37])
+			} else if l >= 40 {
+				fmt.Printf(",\"%d_%s\":", param[l].Id, param[l].Name)
+				fmt.Print(dataF[l-3])
+			}
 		}
+		fmt.Printf(",\"version\":\"%s\"}", version)
 	}
-	fmt.Printf(",\"version\":\"%s\"}", version)
+}
+
+func PrintJSON5(dataF []float32, dataS []uint16, param Modbusparams) {
+	/*fmt.Println(dataF)
+	fmt.Println(len(dataF))
+	fmt.Println(dataS)
+	fmt.Println(len(dataS))*/
+	if dataF == nil || dataS == nil {
+		fmt.Printf("{\"status\":\"error\",\"version\":\"%s\"}", version)
+	} else {
+		for l := 0; l < len(dataF)+5; l++ {
+			if l == 0 {
+				fmt.Printf("{\"%d_%s\":", param[l].Id, param[l].Name)
+				fmt.Print(dataF[l])
+			} else if l > 0 && l < 49 {
+				fmt.Printf(",\"%d_%s\":", param[l].Id, param[l].Name)
+				fmt.Print(dataF[l])
+			} else if l >= 49 && l < 54 {
+				fmt.Printf(",\"%d_%s\":", param[l].Id, param[l].Name)
+				fmt.Print(dataS[l-49])
+			} else if l >= 54 {
+				fmt.Printf(",\"%d_%s\":", param[l].Id, param[l].Name)
+				fmt.Print(dataF[l-5])
+			}
+		}
+		fmt.Printf(",\"version\":\"%s\"}", version)
+	}
 }
 
 func ModbusQuery(address uint16, quantity uint16, serverParams string, slaveID byte) []byte {
@@ -437,17 +468,16 @@ func ModbusQuery(address uint16, quantity uint16, serverParams string, slaveID b
 
 	results, err := client.ReadHoldingRegisters(address, quantity)
 	if err != nil {
-		fmt.Printf("{\"status\":\"error\", \"error\":\"%s\"}", err)
+		//fmt.Printf("{\"status\":\"error\", \"error\":\"%s\"}", err)
 		//fmt.Printf("%s\n", err)
+		return nil
+	} else {
+		//fmt.Printf("%v", results)
+		return results
 	}
-	//fmt.Printf("%v", results)
-	return results
 }
 
 func creatData(params Modbusparams, serverParam string, s byte) (dataFloat []float32, dataShort []uint16) {
-	//var dataFloat []float32
-	//var dataShort []uint16
-
 	tmpdata := ModbusQuery(params[0].Id, 6*2, serverParam, s)
 	i := 0
 	for i < len(tmpdata) {
@@ -592,7 +622,163 @@ func creatData(params Modbusparams, serverParam string, s byte) (dataFloat []flo
 		}
 		i += 4
 	}
-	return dataFloat, dataShort
+	if dataFloat == nil || dataShort == nil {
+		return nil, nil
+	} else {
+		return dataFloat, dataShort
+	}
+}
+
+func creatData5(params Modbusparams, serverParam string, s byte) (dataFloat []float32, dataShort []uint16) {
+	tmpdata := ModbusQuery(params[0].Id, 6*2, serverParam, s)
+	i := 0
+	for i < len(tmpdata) {
+		a := Float32frombytes(tmpdata[i : i+4])
+		if math.IsNaN(float64(a)) {
+			dataFloat = append(dataFloat, 0)
+		} else {
+			dataFloat = append(dataFloat, a)
+		}
+		i += 4
+	}
+
+	tmpdata = ModbusQuery(params[6].Id, 1*2, serverParam, s)
+	i = 0
+	for i < len(tmpdata) {
+		a := Float32frombytes(tmpdata[i : i+4])
+		if math.IsNaN(float64(a)) {
+			dataFloat = append(dataFloat, 0)
+		} else {
+			dataFloat = append(dataFloat, a)
+		}
+		i += 4
+	}
+	tmpdata = ModbusQuery(params[7].Id, 12*2, serverParam, s)
+	i = 0
+	for i < len(tmpdata) {
+		a := Float32frombytes(tmpdata[i : i+4])
+		if math.IsNaN(float64(a)) {
+			dataFloat = append(dataFloat, 0)
+		} else {
+			dataFloat = append(dataFloat, a)
+		}
+		i += 4
+	}
+	tmpdata = ModbusQuery(params[19].Id, 5*2, serverParam, s)
+	i = 0
+	for i < len(tmpdata) {
+		a := Float32frombytes(tmpdata[i : i+4])
+		if math.IsNaN(float64(a)) {
+			dataFloat = append(dataFloat, 0)
+		} else {
+			dataFloat = append(dataFloat, a)
+		}
+		i += 4
+	}
+	tmpdata = ModbusQuery(params[24].Id, 5*2, serverParam, s)
+	i = 0
+	for i < len(tmpdata) {
+		a := Float32frombytes(tmpdata[i : i+4])
+		if math.IsNaN(float64(a)) {
+			dataFloat = append(dataFloat, 0)
+		} else {
+			dataFloat = append(dataFloat, a)
+		}
+		i += 4
+	}
+	tmpdata = ModbusQuery(params[29].Id, 5*2, serverParam, s)
+	i = 0
+	for i < len(tmpdata) {
+		a := Float32frombytes(tmpdata[i : i+4])
+		if math.IsNaN(float64(a)) {
+			dataFloat = append(dataFloat, 0)
+		} else {
+			dataFloat = append(dataFloat, a)
+		}
+		i += 4
+	}
+	tmpdata = ModbusQuery(params[34].Id, 5*2, serverParam, s)
+	i = 0
+	for i < len(tmpdata) {
+		a := Float32frombytes(tmpdata[i : i+4])
+		if math.IsNaN(float64(a)) {
+			dataFloat = append(dataFloat, 0)
+		} else {
+			dataFloat = append(dataFloat, a)
+		}
+		i += 4
+	}
+	tmpdata = ModbusQuery(params[39].Id, 5*2, serverParam, s)
+	i = 0
+	for i < len(tmpdata) {
+		a := Float32frombytes(tmpdata[i : i+4])
+		if math.IsNaN(float64(a)) {
+			dataFloat = append(dataFloat, 0)
+		} else {
+			dataFloat = append(dataFloat, a)
+		}
+		i += 4
+	}
+	tmpdata = ModbusQuery(params[44].Id, 5*2, serverParam, s)
+	i = 0
+	for i < len(tmpdata) {
+		a := Float32frombytes(tmpdata[i : i+4])
+		if math.IsNaN(float64(a)) {
+			dataFloat = append(dataFloat, 0)
+		} else {
+			dataFloat = append(dataFloat, a)
+		}
+		i += 4
+	}
+
+	tmpdata = ModbusQuery(params[49].Id, 5, serverParam, s) //Janitsa short
+	i = 0
+	for i < len(tmpdata) {
+		a := binary.BigEndian.Uint16(tmpdata[i : i+2])
+		dataShort = append(dataShort, a)
+		i += 2
+	}
+
+	tmpdata = ModbusQuery(params[54].Id, 5*2, serverParam, s)
+	i = 0
+	for i < len(tmpdata) {
+		a := Float32frombytes(tmpdata[i : i+4])
+		if math.IsNaN(float64(a)) {
+			dataFloat = append(dataFloat, 0)
+		} else {
+			dataFloat = append(dataFloat, a)
+		}
+		i += 4
+	}
+
+	tmpdata = ModbusQuery(params[59].Id, 5*2, serverParam, s)
+	i = 0
+	for i < len(tmpdata) {
+		a := Float32frombytes(tmpdata[i : i+4])
+		if math.IsNaN(float64(a)) {
+			dataFloat = append(dataFloat, 0)
+		} else {
+			dataFloat = append(dataFloat, a)
+		}
+		i += 4
+	}
+
+	tmpdata = ModbusQuery(params[64].Id, 5*2, serverParam, s)
+	i = 0
+	for i < len(tmpdata) {
+		a := Float32frombytes(tmpdata[i : i+4])
+		if math.IsNaN(float64(a)) {
+			dataFloat = append(dataFloat, 0)
+		} else {
+			dataFloat = append(dataFloat, a)
+		}
+		i += 4
+	}
+	if dataFloat == nil || dataShort == nil {
+		return nil, nil
+	} else {
+		return dataFloat, dataShort
+	}
 }
 
 func Float32frombytes(bytes []byte) float32 {

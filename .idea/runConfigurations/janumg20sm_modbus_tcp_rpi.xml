@@ -2,7 +2,7 @@
   <configuration default="false" name="janumg20sm_modbus_tcp_rpi" type="GoApplicationRunConfiguration" factoryName="Go Application">
     <module name="janumg20cm_modbus_tcp" />
     <working_directory value="$PROJECT_DIR$" />
-    <parameters value="-ip=10.10.11.154 -id=2" />
+    <parameters value="-ip=10.10.11.154 -id=2 -type=3" />
     <envs>
       <env name="GOOS" value="linux" />
       <env name="GOARCH" value="arm" />
@@ -11,7 +11,7 @@
     <kind value="FILE" />
     <filePath value="$PROJECT_DIR$/main.go" />
     <directory value="$PROJECT_DIR$/" />
-    <output_directory value="$PROJECT_DIR$/../janumg20sm_modbus_tcp/bin/0.00.1/rpi" />
+    <output_directory value="$PROJECT_DIR$/bin/0.00.1/rpi" />
     <option name="run" value="false" />
     <method v="2" />
   </configuration>
