@@ -1,7 +1,7 @@
 # janumg20cm-modbus-tcp
 
 
-Read modbus arguments from 19000 address, and returns a json object.
+Read modbus arguments from 1000 to 1416 address, and returns a json object.
 
 Programm flags:
 
@@ -11,7 +11,7 @@ Programm flags:
 
 -id - janitza modbus slave ID (defaut value 1);
 
--type -  (defaut value 0).
+-type -  from 0 to 5 (defaut value 0).
 
 Example:
 
