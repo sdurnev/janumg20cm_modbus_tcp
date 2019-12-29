@@ -2,7 +2,6 @@
   <configuration default="false" name="janumg20cm_modbus_tcp_linux" type="GoApplicationRunConfiguration" factoryName="Go Application" activateToolWindowBeforeRun="false">
     <module name="janumg20cm_modbus_tcp" />
     <working_directory value="$PROJECT_DIR$" />
-    <parameters value="-ip=10.10.12.20 -id=1 -q=1" />
     <envs>
       <env name="GOOS" value="linux" />
       <env name="GOARCH" value="amd64" />
@@ -11,7 +10,6 @@
     <filePath value="$PROJECT_DIR$/main.go" />
     <directory value="$PROJECT_DIR$/" />
     <output_directory value="$PROJECT_DIR$/bin/0.00.1/linux" />
-    <option name="run" value="false" />
     <method v="2" />
   </configuration>
 </component>
